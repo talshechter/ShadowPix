@@ -1,4 +1,3 @@
-from mesh_utils import *
 from image_utils import *
 import numpy as np
 import math
@@ -30,9 +29,9 @@ def local_method(img1: np.ndarray, img2: np.ndarray, img3: np.ndarray, tetha = 6
 
 
 def main():
-    img1_path = 'img1.jpg'
-    img2_path =  'img2.jpg'
-    img3_path = 'img3.jpg'
+    img1_path = 'images/img1.jpg'
+    img2_path =  'images/img2.jpg'
+    img3_path = 'images/img3.jpg'
     size = 50
     output_file = "output"
     img1, img2, img3 = load_images(img1_path, img2_path, img3_path, size)
