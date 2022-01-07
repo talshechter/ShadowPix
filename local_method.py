@@ -36,7 +36,8 @@ def main():
     output_file = "output"
     img1, img2, img3 = load_images(img1_path, img2_path, img3_path, size)
     r, u, v = local_method(img1, img2, img3)
-
+    print("r: ", r)
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
+#    sys.exit(main())
