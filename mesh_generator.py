@@ -1,4 +1,4 @@
-def calculate_u_ver(u, vertices, faces, ver_ctr, pix_size=2.5, wall_th=0.25):
+def calculate_u_vertices_and_faces(u, vertices, faces, ver_ctr, pix_size=2.5, wall_th=0.25):
     n = len(u)
     curr_x = 0
     for i in range (n):
@@ -28,7 +28,7 @@ def calculate_u_ver(u, vertices, faces, ver_ctr, pix_size=2.5, wall_th=0.25):
     return vertices, faces, ver_ctr
 
 
-def calculate_v_ver(v, vertices, faces, ver_ctr, pix_size=2.5, wall_th=0.25):
+def calculate_v_vertices_and_faces(v, vertices, faces, ver_ctr, pix_size=2.5, wall_th=0.25):
     n = len(v)
     curr_x = 0+wall_th
     for i in range (n):
@@ -83,8 +83,8 @@ def generate_mesh(r, u, v, pix_size=2.5, wall_th=0.25):
     faces = []
     vertices_counter = 0
     vertices, faces, vertices_counter = calculate_r_vertices_and_faces(r, vertices, faces, vertices_counter, pix_size, wall_th)
-    vertices, faces, vertices_counter = calculate_u_ver(u, vertices, faces, vertices_counter, pix_size, wall_th)
-    vertices, faces, vertices_counter = calculate_v_ver(v, vertices, faces, vertices_counter, pix_size, wall_th)
+    vertices, faces, vertices_counter = calculate_u_vertices_and_faces(u, vertices, faces, vertices_counter, pix_size, wall_th)
+    vertices, faces, vertices_counter = calculate_v_vertices_and_faces(v, vertices, faces, vertices_counter, pix_size, wall_th)
     return vertices, faces
 
 
