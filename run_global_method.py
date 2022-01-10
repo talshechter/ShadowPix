@@ -1,12 +1,11 @@
-
-from local_method import *
-from mesh_generator import *
+# from global_method import *
+from global_method_mesh_generator import *
 from obj_file_creator import *
 
 def run():
-    r, u, v = main()
-    vertices, faces = generate_mesh(r, u, v)
-    output_file = 'output.obj'
+    heightfield = main()
+    vertices, faces = generate_mesh(heightfield)
+    output_file = 'output_global_method.obj'
     # print("v : ", vertices)
     # print("f : ", faces)
 
