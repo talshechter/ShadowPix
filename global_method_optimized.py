@@ -7,17 +7,16 @@ def heightfield_to_image_init(image_size, radius):
     def heightfield_to_image(heightfield):
         """calculates the effective shaddow on every pixel and converts the heightfield to image."""
         image = torch.zeros((image_size, image_size))
-        for i in range(image_size):
-            for j in range(image_size):
-                max_effective_shaddow_on_j = 0
-                for k in range(1, radius+1):
-                    if j+k >= image_size:
-                        break
-                    pixel_effective_shaddow_on_j = heightfield[i, j+k] - k
-                    if pixel_effective_shaddow_on_j > max_effective_shaddow_on_j:
-                        max_effective_shaddow_on_j = pixel_effective_shaddow_on_j
-                image[i, j] = max_effective_shaddow_on_j - heightfield[i, j]
+        for j in range(image_size):
+            max_effective_shaddow_on_j = torch.zeros(image_size)
+            for k in range(1, radius+1):
+                if j+k >= image_size:
+                    break
+                pixel_effective_shaddow_on_j = heightfield[:, j+k] - k
+                max_effective_shaddow_on_j = torch.max(pixel_effective_shaddow_on_j, max_effective_shaddow_on_j)
+            image[:, j] = max_effective_shaddow_on_j - heightfield[:, j]
         return image
+        
     return heightfield_to_image
 
 
