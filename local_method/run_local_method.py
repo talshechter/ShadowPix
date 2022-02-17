@@ -1,4 +1,3 @@
-
 from local_method import *
 from local_results_to_images_converter import convert_result_to_images
 

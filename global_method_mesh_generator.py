@@ -1,71 +1,76 @@
-def generate_mesh(heightfield, element_size=0.5):
-    vertices = calculate_vertices(heightfield, element_size=0.5)
-    faces = []
-    n = len(heightfield)
-    faces = calculate_vertical_faces(faces, n)
-    faces = calculate_horizontal_faces(faces, n)
+import numpy as np
+import os
+
+def generate_mesh(heightfield, file_name):
+    vertices = create_vertices(heightfield)
+    faces = create_faces(heightfield)
+    create_obj_file_from_mesh(file_name, vertices, faces)
     return vertices, faces
 
-def calculate_vertices(heightfield, element_size=0.5):
-    n = len(heightfield)
-    vertices = []
-    curr_x = 0
-    curr_y = 0
-    for i in range (n):
-        for j in range(n):
-            curr_z = heightfield[i][j]
-            # add 4 points of curr element
-            vertices.append((curr_x, curr_y, curr_z))                           # 1 top left
-            vertices.append((curr_x+element_size, curr_y, curr_z))              # 2 top right
-            vertices.append((curr_x, curr_y+element_size, curr_z))              # 3 bottom left
-            vertices.append((curr_x+element_size, curr_y+element_size, curr_z)) # 4 bottom right
-            curr_y += element_size
-        curr_x += element_size
-        curr_y = 0
+def create_vertices(heightfield):
+    # init
+    n, m = heightfield.shape # n = rows number, m = cols number
+    vertices = np.zeros([n, m, 4, 3])
+    indexes = np.arange(0, m, dtype=np.uint32)
+    
+    # assign x values
+    vertices[:, :, 0, 0] =  indexes[np.newaxis, :]
+    vertices[:, :, 1, 0] = vertices[:, :, 0, 0]
+    vertices[:, :, 2, 0] = vertices[:, :, 0, 0] + 1
+    vertices[:, :, 3, 0] = vertices[:, :, 2, 0]
+
+    # assign y values
+    vertices[:, :, 0, 2] = indexes[:, np.newaxis]
+    vertices[:, :, 3, 2] = vertices[:, :, 0, 2]
+    vertices[:, :, 1, 2] = vertices[:, :, 0, 2] + 1
+    vertices[:, :, 2, 2] = vertices[:, :, 1, 2]
+    
+    # assign z values from heightfield
+    vertices[:, :, :, 1] = heightfield[:, :, np.newaxis]
+    
+    vertices = convert_to_triangles(vertices)
     return vertices
 
-def calculate_horizontal_faces(faces, n):
-    # vertices indices
-    curr_top = 2
-    curr_bottom = 4
-    next_top = curr_top + (4*n-1)
-    next_bottom = curr_bottom + (4*n-1)
-    for i in range (n-1):
-        for j in range(n):
-            faces.append((curr_top, curr_bottom, next_top, next_bottom))
-            curr_top, curr_bottom, next_top, next_bottom = move_to_next_vertical_element(curr_top, curr_bottom, next_top, next_bottom)
-        curr_top, curr_bottom, next_top, next_bottom = move_to_next_vertical_element(curr_top, curr_bottom, next_top, next_bottom)
+def create_faces(heightfield):
+    # init
+    n, m = heightfield.shape # n = rows number, m = cols number
+    faces = np.zeros([n, m, 2, 3], dtype=np.uint32)
+    indexes = np.arange(0, m, dtype=np.uint32)
+    
+    # calculate faces
+    vertices_of_faces_type1 = [indexes * 4, indexes * 4 + 1, indexes * 4 + 2]
+    vertices_of_faces_type1 = np.array(vertices_of_faces_type1)
+    faces[:, :, 0, :] = np.transpose(vertices_of_faces_type1)[np.newaxis, :, :]
+    
+    vertices_of_faces_type2 = [indexes * 4, indexes * 4 + 2, indexes * 4 + 3]
+    vertices_of_faces_type2 = np.array(vertices_of_faces_type2)
+    faces[:, :, 1, :] = np.transpose(vertices_of_faces_type2)[np.newaxis, :, :]
+    
+    faces += (indexes * m * 4)[:, np.newaxis, np.newaxis, np.newaxis]
+    faces = convert_to_triangles(faces)
+    faces += 1
+    
     return faces
 
-def calculate_vertical_faces(faces, n):
-    # vertices indices
-    curr_left = 3
-    curr_right = 4
-    next_left = 5
-    next_right = 6
-    for i in range (n):
-        for j in range(n-1):
-            faces.append((curr_left, curr_right, next_left, next_right))
-            curr_left, curr_right, next_left, next_right = move_to_next_vertical_element(curr_left, curr_right, next_left, next_right)
-        curr_left, curr_right, next_left, next_right = move_to_next_vertical_element(curr_left, curr_right, next_left, next_right)           
-    return faces
+def convert_to_triangles(np_array):
+    np_array.shape = (np_array.size // 3, 3)
+    return np_array
 
-# helper method
-def move_to_next_vertical_element(a, b, c, d):
-    a+=4
-    b+=4
-    c+=4
-    d+=4
-    return a, b, c, d
+def create_obj_file_from_mesh(file, vertices, faces):
+    with open(file, 'w+') as f:
+        for v in vertices:
+            f.write("v %f %f %f\n" % (v[0], v[1], v[2]))
+        for face in faces:
+            f.write("f %d %d %d\n" % (face[0], face[1], face[2]))
+    print("Created", file)
+
 
 def test():
     heightfield = [[1, 2], [3, 4]]
-    vertices, faces = generate_mesh(heightfield)  
+    heightfield = np.array(heightfield)
+    vertices, faces = generate_mesh(heightfield, "test.obj")  
     print("v: ", vertices)
     print("f: ", faces)
-
-    print("Vertices should be: [(0, 0, 1), (0.5, 0, 1), (0, 0.5, 1), (0.5, 0.5, 1), (0, 0.5, 2), (0.5, 0.5, 2), (0, 1.0, 2), (0.5, 1.0, 2), (0.5, 0, 3), (1.0, 0, 3), (0.5, 0.5, 3), (1.0, 0.5, 3), (0.5, 0.5, 4), (1.0, 0.5, 4), (0.5, 1.0, 4), (1.0, 1.0, 4)]")  
-    print("Faces should be: [(3, 4, 5, 6), (11, 12, 13, 14), (2, 4, 9, 11), (6, 8, 13, 15)]")  
          
 if __name__ == '__main__':
     test()
