@@ -22,12 +22,11 @@ We implemented algorithms that generate ShadowPix of given input images.
 
 ### Run The Method
 - Perform the following commands
-- The output images will be saved in the "outputs" directory
 ```
 cd local_method
 python run_local_method.py
 ```
-
+- The output images will be saved in the "outputs" directory
 - In order to run over your images: Add your images to "local_images" directory, and change the name of the images in the file "run_local_method.py".
 
 ## Optimized Global Method
@@ -37,17 +36,17 @@ python run_local_method.py
 - In order to view the results, render the mesh and light it from different directions. (For example, using blender.)
 
 ### Example
-- Input images and below the output images (The generated images from the mesh we computed, by lighting it from different angles)
+- Input images and below the output imagesץ
+    - (The generated images from the mesh we computed, by rendering the mesh in blender and lighting it from different angles)
 ![Global method - results](./attachments/global_method_result.jpg)
 
 ### Run The Method
 - Perform the following commands
-- The output images will be saved in the "outputs" directory
 ```
 cd global_method
 python global_method_optimized.py
 ```
-
+- The output mesh will be saved in the "outputs" directory as obj file
 - In order to run over your images: Add your images to "global_images" directory, and change the name of the images in the file "global_method_optimized.py".
 
 ## Global Method
@@ -56,16 +55,16 @@ python global_method_optimized.py
 - This method is based in creating heightfield, then converting it to mesh.
 
 ### Warning
-- The run time of the method is very long - it's not guarenteed that it will converge to good results in reasonable time.
+- The run time of the method is very long 
+- It's not guarenteed that it will converge to good results in reasonable time.
 ![Global method - warning](./attachments/global_method_warning.jpg)
 
 ### Run The Method
 - Perform the following commands
-- The output images will be saved in the "outputs" directory
 ```
 cd global_method
 python global_method.py
 ```
-
+- The output images will be saved in the "outputs" directory
 - In order to run over your images: Add your images to "global_images" directory, and change the name of the images in the file "global_method.py".
 
