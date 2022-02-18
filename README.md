@@ -9,15 +9,16 @@ We implemented algorithms that generate ShadowPix of given input images.
 - The local method can receive up to 3 images as input.
 - The method is based on creating walls that cast shadow and surfaces that receive this shadow.
 - Given input images I1, I2, I3, the method computes r, u, v such that:
+![Local method - equations](./attachments/local_method_equations.jpg)
 - The intuition is that from each direction, the difference between the shadow casters and receivers will result in different input image.
 
 ### Example
 - Input images:
-![Local method - input images]()
+![Local method - input images](./attachments/local_method_input.jpg)
 
 - Output images:
     - (The generated images from the 3D model we computed, by lighting it from different angles)
-![Local method - output images]()
+![Local method - output images](./attachments/local_method_output.jpg)
 
 ### Run The Method
 - Perform the following commands
@@ -37,7 +38,7 @@ python run_local_method.py
 
 ### Example
 - Input images and below the output images (The generated images from the mesh we computed, by lighting it from different angles)
-![Global method - results]()
+![Global method - results](./attachments/global_method_result.jpg)
 
 ### Run The Method
 - Perform the following commands
@@ -56,6 +57,7 @@ python global_method_optimized.py
 
 ### Warning
 - The run time of the method is very long - it's not guarenteed that it will converge to good results in reasonable time.
+![Global method - warning](./attachments/global_method_warning.jpg)
 
 ### Run The Method
 - Perform the following commands
