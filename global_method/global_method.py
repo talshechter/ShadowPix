@@ -91,12 +91,15 @@ class GlobalMethod:
         return image
 
 def main():
+    print("Running global method...")
     paths = ["global_images/img1.jpg", "global_images/img2.jpg", "global_images/img3.jpg", "global_images/img4.jpg"]
     images = load_global_images(paths, SIZE)
     global_method = GlobalMethod(images, SIZE)
     global_method.optimize_simulate_anealing()
+    print("Finished running the algorithm, generating binary images from result")
     for i, image in enumerate(global_method.binary_images):
-        cv2.imwrite(f"im_{i}.png", image)
+        cv2.imwrite(f"./outputs/im_{i}.png", image)
+    print("Done. Output images saved in \"outputs\" directory")
 
 
 if __name__ == '__main__':

@@ -32,13 +32,14 @@ def compute_loss(images, heightfield, heightfield_to_image):
 
 
 def main():
+    print("Running optimized global method...")
     img1_path = 'global_images/img1.jpg'
     img2_path = 'global_images/img2.jpg'
     img3_path = 'global_images/img3.jpg'
     img4_path = 'global_images/img4.jpg'
     size = 50
     radius = 10
-    num_iterations = 10000
+    num_iterations = 1
     images = load_global_images([img1_path, img2_path, img3_path, img4_path], size)
     device=torch.device('cpu')
     tensor_images = torch.stack([torch.from_numpy(image).to(device) for image in images]).float()
@@ -57,7 +58,9 @@ def main():
             loss_trace.append(loss)
     with open('optimized_global_loss_trace.txt', 'w') as f:
         f.write(str(loss_trace))
-    generate_mesh(heightfield.detach(), 'optimized_global_method_mesh.obj')
+    print("Finished running the algorithm, generating mesh")
+    generate_mesh(heightfield.detach(), './outputs/optimized_global_method_mesh.obj')
+    print("Done. Output mesh saved in \"outputs\" directory")
 
 
 if __name__ == '__main__':
